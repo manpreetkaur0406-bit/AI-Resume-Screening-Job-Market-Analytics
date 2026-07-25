@@ -51,8 +51,12 @@ if menu == "🏠 Home":
     """)
 
 elif menu == "📊 EDA":
+
     st.title("📊 Exploratory Data Analysis")
-    st.write("EDA page is under development.")
+
+    st.dataframe(resume_df.head())
+    st.dataframe(salary_df.head())
+    st.dataframe(jobs_df.head())
 
 elif menu == "📄 ATS Score":
     st.title("📄 ATS Resume Score")
