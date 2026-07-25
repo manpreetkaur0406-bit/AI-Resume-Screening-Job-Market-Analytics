@@ -78,10 +78,41 @@ elif menu == "📊 EDA":
 
 elif menu == "📄 ATS Score":
 
-    ats_score = 40
+    st.title("📄 ATS Resume Score")
 
-    st.metric("ATS Score", f"{ats_score}%")
+    # Resume skills
+    resume_skills = [
+        "python",
+        "machine learning",
+        "sql",
+        "data science",
+        "statistics"
+    ]
 
+    # Required job skills
+    required_skills = [
+        "python",
+        "sql",
+        "statistics",
+        "aws",
+        "git"
+    ]
+
+    # Find matched skills
+    matched_skills = list(set(resume_skills) & set(required_skills))
+
+    # Calculate ATS score
+    ats_score = (len(matched_skills) / len(required_skills)) * 100
+
+    st.metric("ATS Score", f"{ats_score:.0f}%")
+
+    st.subheader("✅ Matched Skills")
+    st.write(matched_skills)
+
+    missing_skills = list(set(required_skills) - set(resume_skills))
+
+    st.subheader("❌ Missing Skills")
+    st.write(missing_skills)
 elif menu == "💼 Job Recommendation":
     st.title("💼 AI Job Recommendation")
     st.write("Job Recommendation page is under development.")
