@@ -279,7 +279,5 @@ elif menu == "ℹ️ About":
     - Pandas
     - Scikit-learn
     - Plotly
-    """)
-
-
+    
     """)
