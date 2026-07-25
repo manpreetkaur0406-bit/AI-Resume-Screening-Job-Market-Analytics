@@ -79,6 +79,18 @@ elif menu == "📊 EDA":
 elif menu == "📄 ATS Score":
 
     st.title("📄 ATS Resume Score")
+    uploaded_file = st.file_uploader(
+        "Upload Resume",
+        type=["pdf", "docx"]
+    )
+
+    if uploaded_file is not None:
+
+    # Extract text
+    # Extract skills
+    # Calculate ATS
+        st.success("Resume uploaded successfully!")
+    
 
     # Resume skills
     resume_skills = [
@@ -113,6 +125,7 @@ elif menu == "📄 ATS Score":
 
     st.subheader("❌ Missing Skills")
     st.write(missing_skills)
+    st.metric("ATS Score","85%")
 
 elif menu == "💼 Job Recommendation":
 
