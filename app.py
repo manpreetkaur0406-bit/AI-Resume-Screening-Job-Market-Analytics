@@ -59,8 +59,10 @@ elif menu == "📊 EDA":
     st.dataframe(jobs_df.head())
 
 elif menu == "📄 ATS Score":
-    st.title("📄 ATS Resume Score")
-    st.metric("ATS Score", "40%")
+
+    ats_score = 40
+
+    st.metric("ATS Score", f"{ats_score}%")
 
 elif menu == "💼 Job Recommendation":
     st.title("💼 AI Job Recommendation")
