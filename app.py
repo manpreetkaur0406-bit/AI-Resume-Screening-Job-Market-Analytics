@@ -250,8 +250,31 @@ elif menu == "💰 Salary Prediction":
 
         prediction = model.predict(sample)
 
-        st.success(f"Predicted Salary: ${prediction[0]:,.2f}")
+# Approximate exchange rate
+usd_to_inr = 87
 
+salary_inr = prediction[0] * usd_to_inr
+
+st.success(f"💰 Predicted Salary: ₹ {salary_inr:,.0f}")
 elif menu == "ℹ️ About":
-    st.title("ℹ️ About")
-    st.write("AI Resume Screening & Job Market Analytics")
+
+    st.title("ℹ️ About Project")
+
+    st.write("""
+    **AI Resume Screening & Job Market Analytics**
+    
+    This project uses Data Analytics and Machine Learning to:
+    
+    • Analyze resumes
+    • Calculate ATS scores
+    • Recommend jobs
+    • Analyze salary trends
+    • Predict salaries
+    
+    **Technologies Used**
+    - Python
+    - Streamlit
+    - Pandas
+    - Scikit-learn
+    - Plotly
+    """)
