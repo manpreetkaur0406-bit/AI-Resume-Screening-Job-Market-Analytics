@@ -127,6 +127,10 @@ elif menu == "📄 ATS Score":
     st.write(missing_skills)
     st.metric("ATS Score","85%")
 
+elif menu == "🧠 Skill Gap":
+
+    st.title("🧠 Skill Gap Analysis")
+    
 elif menu == "💼 Job Recommendation":
 
     st.title("💼 AI Job Recommendation")
