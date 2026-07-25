@@ -203,8 +203,54 @@ elif menu == "📈 Salary Analytics":
     st.plotly_chart(fig4, use_container_width=True)
 
 elif menu == "💰 Salary Prediction":
+
     st.title("💰 Salary Prediction")
-    st.write("Salary Prediction page is under development.")
+
+    model = joblib.load("salary_prediction_model.pkl")
+
+    experience = st.number_input("Experience Level (Encoded)", min_value=0, max_value=4, value=2)
+
+    employment = st.number_input("Employment Type (Encoded)", min_value=0, max_value=3, value=0)
+
+    job_title = st.number_input("Job Title (Encoded)", min_value=0, value=10)
+
+    salary_currency = st.number_input("Salary Currency (Encoded)", min_value=0, value=0)
+
+    residence = st.number_input("Employee Residence (Encoded)", min_value=0, value=20)
+
+    remote = st.number_input("Remote Ratio", min_value=0, max_value=100, value=100)
+
+    company_location = st.number_input("Company Location (Encoded)", min_value=0, value=20)
+
+    company_size = st.number_input("Company Size (Encoded)", min_value=0, max_value=2, value=1)
+
+    if st.button("Predict Salary"):
+
+        sample = pd.DataFrame([[
+            2023,
+            experience,
+            employment,
+            job_title,
+            salary_currency,
+            residence,
+            remote,
+            company_location,
+            company_size
+        ]], columns=[
+            "work_year",
+            "experience_level",
+            "employment_type",
+            "job_title",
+            "salary_currency",
+            "employee_residence",
+            "remote_ratio",
+            "company_location",
+            "company_size"
+        ])
+
+        prediction = model.predict(sample)
+
+        st.success(f"Predicted Salary: ${prediction[0]:,.2f}")
 
 elif menu == "ℹ️ About":
     st.title("ℹ️ About")
