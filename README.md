@@ -48,4 +48,4 @@ AI-Resume-Screening-Job-Market-Analytics/
 ```
 
 ## 👩‍💻 Author
-**Kooki**
+**Manpreet Kaur**
