@@ -5,11 +5,29 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import joblib
 
-resume_df = pd.read_csv("resume_data.csv")
-salary_df = pd.read_csv("ds_salaries.csv")
-jobs_df = pd.read_csv("DataAnalyst.csv.zip", compression="zip")
-people_df = pd.read_csv("01_people.csv")
+try:
+    resume_df = pd.read_csv("resume_data.csv")
+    st.sidebar.success("✅ resume_data.csv loaded")
+except Exception as e:
+    st.sidebar.error(f"resume_data.csv: {e}")
 
+try:
+    salary_df = pd.read_csv("ds_salaries.csv")
+    st.sidebar.success("✅ ds_salaries.csv loaded")
+except Exception as e:
+    st.sidebar.error(f"ds_salaries.csv: {e}")
+
+try:
+    jobs_df = pd.read_csv("DataAnalyst.csv.zip", compression="zip")
+    st.sidebar.success("✅ DataAnalyst.csv.zip loaded")
+except Exception as e:
+    st.sidebar.error(f"DataAnalyst.csv.zip: {e}")
+
+try:
+    people_df = pd.read_csv("01_people.csv")
+    st.sidebar.success("✅ 01_people.csv loaded")
+except Exception as e:
+    st.sidebar.error(f"01_people.csv: {e}")
 
 st.set_page_config(
     page_title="AI Resume Screening & Job Market Analytics",
