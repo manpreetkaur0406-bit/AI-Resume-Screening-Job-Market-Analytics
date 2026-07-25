@@ -156,14 +156,51 @@ elif menu == "💼 Job Recommendation":
         ]
     )
 
-
-elif menu == "💼 Job Recommendation":
-    st.title("💼 AI Job Recommendation")
-    st.write("Job Recommendation page is under development.")
-
 elif menu == "📈 Salary Analytics":
-    st.title("📈 Salary Analytics")
-    st.write("Salary Analytics page is under development.")
+
+    st.title("📈 Salary Analytics Dashboard")
+
+    # Average Salary by Experience Level
+    avg_salary = salary_df.groupby("experience_level")["salary_in_usd"].mean().reset_index()
+
+    fig1 = px.bar(
+        avg_salary,
+        x="experience_level",
+        y="salary_in_usd",
+        title="Average Salary by Experience Level"
+    )
+
+    st.plotly_chart(fig1, use_container_width=True)
+
+    # Company Size Distribution
+    fig2 = px.pie(
+        salary_df,
+        names="company_size",
+        title="Company Size Distribution"
+    )
+
+    st.plotly_chart(fig2, use_container_width=True)
+
+    # Top Hiring Countries
+    top_country = salary_df["company_location"].value_counts().head(10)
+
+    fig3 = px.bar(
+        x=top_country.index,
+        y=top_country.values,
+        labels={"x":"Country","y":"Jobs"},
+        title="Top Hiring Countries"
+    )
+
+    st.plotly_chart(fig3, use_container_width=True)
+
+    # Remote Work Distribution
+    fig4 = px.histogram(
+        salary_df,
+        x="remote_ratio",
+        title="Remote Work Distribution"
+    )
+
+    st.plotly_chart(fig4, use_container_width=True)
 
 elif menu == "💰 Salary Prediction":
     st.title("💰 Salary Prediction")
