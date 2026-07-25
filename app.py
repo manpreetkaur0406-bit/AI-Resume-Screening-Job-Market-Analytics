@@ -208,54 +208,62 @@ elif menu == "💰 Salary Prediction":
 
     model = joblib.load("salary_prediction_model.pkl")
 
-    experience = st.number_input("Experience Level (Encoded)", min_value=0, max_value=4, value=2)
-
-    employment = st.number_input("Employment Type (Encoded)", min_value=0, max_value=3, value=0)
-
-    job_title = st.number_input("Job Title (Encoded)", min_value=0, value=10)
-
-    salary_currency = st.number_input("Salary Currency (Encoded)", min_value=0, value=0)
-
-    residence = st.number_input("Employee Residence (Encoded)", min_value=0, value=20)
-
+    experience = st.number_input("Experience Level", min_value=0, max_value=4, value=2)
+    employment = st.number_input("Employment Type", min_value=0, max_value=3, value=0)
+    job_title = st.number_input("Job Title", min_value=0, value=10)
+    salary_currency = st.number_input("Salary Currency", min_value=0, value=0)
+    residence = st.number_input("Employee Residence", min_value=0, value=20)
     remote = st.number_input("Remote Ratio", min_value=0, max_value=100, value=100)
-
-    company_location = st.number_input("Company Location (Encoded)", min_value=0, value=20)
-
-    company_size = st.number_input("Company Size (Encoded)", min_value=0, max_value=2, value=1)
+    company_location = st.number_input("Company Location", min_value=0, value=20)
+    company_size = st.number_input("Company Size", min_value=0, max_value=2, value=1)
 
     if st.button("Predict Salary"):
 
-        sample = pd.DataFrame([[
-            2023,
-            experience,
-            employment,
-            job_title,
-            salary_currency,
-            residence,
-            remote,
-            company_location,
-            company_size
-        ]], columns=[
-            "work_year",
-            "experience_level",
-            "employment_type",
-            "job_title",
-            "salary_currency",
-            "employee_residence",
-            "remote_ratio",
-            "company_location",
-            "company_size"
-        ])
+        sample = pd.DataFrame([[2023, experience, employment, job_title,
+                                salary_currency, residence, remote,
+                                company_location, company_size]],
+                              columns=[
+                                  "work_year",
+                                  "experience_level",
+                                  "employment_type",
+                                  "job_title",
+                                  "salary_currency",
+                                  "employee_residence",
+                                  "remote_ratio",
+                                  "company_location",
+                                  "company_size"
+                              ])
 
         prediction = model.predict(sample)
 
-# Approximate exchange rate
-usd_to_inr = 87
+        usd_to_inr = 87
+        salary_inr = prediction[0] * usd_to_inr
 
-salary_inr = prediction[0] * usd_to_inr
+        st.success(f"💰 Predicted Salary: ₹ {salary_inr:,.0f}")
 
-st.success(f"💰 Predicted Salary: ₹ {salary_inr:,.0f}")
+elif menu == "ℹ️ About":
+
+    st.title("ℹ️ About Project")
+
+    st.write("""
+    **AI Resume Screening & Job Market Analytics**
+
+    This project uses Data Analytics and Machine Learning to:
+
+    • Analyze resumes
+    • Calculate ATS scores
+    • Recommend jobs
+    • Analyze salary trends
+    • Predict salaries
+
+    **Technologies Used**
+    - Python
+    - Streamlit
+    - Pandas
+    - Scikit-learn
+    - Plotly
+    """)
+
 elif menu == "ℹ️ About":
 
     st.title("ℹ️ About Project")
