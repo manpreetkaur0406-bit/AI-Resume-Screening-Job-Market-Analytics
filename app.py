@@ -1,24 +1,28 @@
-
 import streamlit as st
 
 st.set_page_config(
-    page_title="AI Resume & Job Market Analytics",
+    page_title="AI Resume Screening & Job Market Analytics",
     page_icon="🤖",
     layout="wide"
 )
 
-st.title("🤖 AI Resume & Job Market Analytics")
-
-st.write("Welcome to my Final Year Data Analytics Project!")
+st.title("🤖 AI Resume Screening & Job Market Analytics")
 
 st.markdown("""
-### Features
-- 📊 EDA
-- 📄 ATS Score
+Welcome to my **Final Year Data Analytics Project**.
+
+## 📌 Project Description
+This project helps users analyze resumes, calculate ATS scores, identify skill gaps,
+recommend suitable jobs, predict salaries, and explore job market trends using
+Data Analytics and Machine Learning.
+
+### 🚀 Features
+- 📊 Exploratory Data Analysis (EDA)
+- 📄 ATS Resume Score
 - 🧠 Skill Gap Analysis
-- 💼 Job Recommendation
+- 💼 AI Job Recommendation
 - 💰 Salary Prediction
 - 📈 Salary Analytics
 
-👈 Choose a page from the sidebar.
+👈 **Select a page from the sidebar to explore the project.**
 """)
