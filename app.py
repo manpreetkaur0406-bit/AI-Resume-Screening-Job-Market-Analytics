@@ -281,29 +281,5 @@ elif menu == "ℹ️ About":
     - Plotly
     """)
 
-if menu == "🏠 Home":
-    ...
 
-elif menu == "📊 EDA":
-    ...
-
-elif menu == "📄 ATS Score":
-    # Resume Upload
-    # Skill Extraction
-    # ATS Score
-
-elif menu == "🧠 Skill Gap":
-    ...
-
-elif menu == "💼 Job Recommendation":
-    ...
-
-elif menu == "📈 Salary Analytics":
-    ...
-
-elif menu == "💰 Salary Prediction":
-    ...
-
-elif menu == "ℹ️ About":
-    ...
     """)
