@@ -113,6 +113,50 @@ elif menu == "📄 ATS Score":
 
     st.subheader("❌ Missing Skills")
     st.write(missing_skills)
+
+elif menu == "💼 Job Recommendation":
+
+    st.title("💼 AI Job Recommendation")
+
+    candidate_skills = [
+        "python",
+        "machine learning",
+        "sql",
+        "statistics",
+        "data science"
+    ]
+
+    recommendations = []
+
+    for _, row in jobs_df.iterrows():
+
+        description = str(row["Job Description"]).lower()
+
+        score = sum(skill in description for skill in candidate_skills)
+
+        recommendations.append(score)
+
+    jobs_df["Match Score"] = recommendations
+
+    top_jobs = jobs_df.sort_values(
+        "Match Score",
+        ascending=False
+    ).head(10)
+
+    st.subheader("Top Recommended Jobs")
+
+    st.dataframe(
+        top_jobs[
+            [
+                "Job Title",
+                "Company Name",
+                "Location",
+                "Match Score"
+            ]
+        ]
+    )
+
+
 elif menu == "💼 Job Recommendation":
     st.title("💼 AI Job Recommendation")
     st.write("Job Recommendation page is under development.")
