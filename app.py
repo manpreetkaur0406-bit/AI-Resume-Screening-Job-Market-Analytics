@@ -281,25 +281,29 @@ elif menu == "ℹ️ About":
     - Plotly
     """)
 
+if menu == "🏠 Home":
+    ...
+
+elif menu == "📊 EDA":
+    ...
+
+elif menu == "📄 ATS Score":
+    # Resume Upload
+    # Skill Extraction
+    # ATS Score
+
+elif menu == "🧠 Skill Gap":
+    ...
+
+elif menu == "💼 Job Recommendation":
+    ...
+
+elif menu == "📈 Salary Analytics":
+    ...
+
+elif menu == "💰 Salary Prediction":
+    ...
+
 elif menu == "ℹ️ About":
-
-    st.title("ℹ️ About Project")
-
-    st.write("""
-    **AI Resume Screening & Job Market Analytics**
-    
-    This project uses Data Analytics and Machine Learning to:
-    
-    • Analyze resumes
-    • Calculate ATS scores
-    • Recommend jobs
-    • Analyze salary trends
-    • Predict salaries
-    
-    **Technologies Used**
-    - Python
-    - Streamlit
-    - Pandas
-    - Scikit-learn
-    - Plotly
+    ...
     """)
