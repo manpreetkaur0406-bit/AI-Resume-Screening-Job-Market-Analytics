@@ -342,11 +342,12 @@ elif menu == "💼 Job Recommendation":
             ]
         ]
     )
+
 elif menu == "💼 Job Recommendation":
 
     st.title("💼 AI Job Recommendation")
 
-    # Check if ATS page has extracted resume skills
+    # Check if resume has been analyzed
     if "resume_skills" not in st.session_state:
 
         st.warning("📄 Please upload your resume first from the ATS Score page.")
@@ -355,9 +356,10 @@ elif menu == "💼 Job Recommendation":
 
         candidate_skills = st.session_state["resume_skills"]
 
+        # No skills found in resume
         if len(candidate_skills) == 0:
 
-            st.error("❌ No skills found in your resume.")
+            st.error("❌ No skills were found in your resume.")
             st.stop()
 
         st.subheader("✅ Skills Found in Resume")
@@ -365,6 +367,7 @@ elif menu == "💼 Job Recommendation":
 
         recommendations = []
 
+        # Calculate Match Score
         for _, row in jobs_df.iterrows():
 
             description = str(row["Job Description"]).lower()
@@ -380,23 +383,23 @@ elif menu == "💼 Job Recommendation":
 
         jobs_df["Match Score"] = recommendations
 
-        # Keep only matching jobs
+        # Keep only jobs with at least one matching skill
         matched_jobs = jobs_df[jobs_df["Match Score"] > 0]
 
         # No matching jobs
         if matched_jobs.empty:
 
             st.error("❌ No jobs recommended for your resume.")
-            st.info("Try improving your resume by adding more relevant technical skills.")
+            st.info("Please improve your resume by adding relevant technical skills, projects, certifications, or experience.")
 
         else:
 
             top_jobs = matched_jobs.sort_values(
-                "Match Score",
+                by="Match Score",
                 ascending=False
             ).head(5)
 
-            st.subheader("🏆 Top Recommended Jobs")
+            st.subheader("🏆 Recommended Jobs")
 
             for _, row in top_jobs.iterrows():
 
@@ -405,23 +408,21 @@ elif menu == "💼 Job Recommendation":
                     len(candidate_skills)
                 ) * 100
 
+                if match_percentage > 100:
+                    match_percentage = 100
+
                 st.markdown("---")
 
                 st.markdown(f"### 💼 {row['Job Title']}")
 
-                st.write(f"🏢 Company: {row['Company Name']}")
-                st.write(f"📍 Location: {row['Location']}")
+                st.write(f"🏢 **Company:** {row['Company Name']}")
+                st.write(f"📍 **Location:** {row['Location']}")
+                st.write(f"🎯 **Match:** {match_percentage:.0f}%")
 
-                st.progress(min(int(match_percentage), 100))
-
-                st.success(f"⭐ Match Score: {match_percentage:.0f}%")
+                st.progress(int(match_percentage))
 
                 with st.expander("View Job Description"):
-
                     st.write(row["Job Description"])
-
-
-
 
 
 elif menu == "📈 Salary Analytics":
