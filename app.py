@@ -82,65 +82,171 @@ elif menu == "📄 ATS Score":
 
     uploaded_file = st.file_uploader(
         "Upload Resume",
-        type=["pdf", "docx"]
+        type=["pdf"]
     )
 
     if uploaded_file is None:
-        st.info("📄 Please upload your resume to calculate the ATS score.")
+
+        st.info("📄 Please upload your resume.")
 
     else:
 
         st.success("✅ Resume uploaded successfully!")
 
-        # Temporary resume skills
-        # (Later these will come from the uploaded resume)
-        resume_skills = [
+        # ==========================
+        # Read PDF
+        # ==========================
+
+        resume_text = ""
+
+        with pdfplumber.open(uploaded_file) as pdf:
+
+            for page in pdf.pages:
+
+                text = page.extract_text()
+
+                if text:
+                    resume_text += text.lower()
+
+        # ==========================
+        # Skill Database
+        # ==========================
+
+        skill_database = [
+
             "python",
+            "sql",
+            "excel",
+            "power bi",
+            "tableau",
             "machine learning",
-            "sql",
+            "deep learning",
+            "statistics",
             "data science",
-            "statistics"
+            "pandas",
+            "numpy",
+            "scikit-learn",
+            "tensorflow",
+            "keras",
+            "aws",
+            "azure",
+            "git",
+            "docker",
+            "linux",
+            "mysql",
+            "postgresql",
+            "mongodb",
+            "communication",
+            "problem solving"
+
         ]
 
-        # Required job skills
+        # ==========================
+        # Extract Skills
+        # ==========================
+
+        resume_skills = []
+
+        for skill in skill_database:
+
+            if skill.lower() in resume_text:
+
+                resume_skills.append(skill)
+
+        # Save for Job Recommendation page
+
+        st.session_state["resume_skills"] = resume_skills
+
+        # ==========================
+        # Required Skills
+        # ==========================
+
         required_skills = [
+
             "python",
             "sql",
+            "excel",
+            "power bi",
+            "machine learning",
             "statistics",
-            "aws",
-            "git"
+            "git",
+            "communication"
+
         ]
 
-        # Matched skills
         matched_skills = list(
-            set(resume_skills) & set(required_skills)
+            set(resume_skills) &
+            set(required_skills)
         )
 
-        # Missing skills
         missing_skills = list(
-            set(required_skills) - set(resume_skills)
+            set(required_skills) -
+            set(resume_skills)
         )
 
-        # ATS Score
         ats_score = (
             len(matched_skills) /
             len(required_skills)
         ) * 100
 
-        st.metric("📄 ATS Score", f"{ats_score:.0f}%")
+        # ==========================
+        # Display ATS Score
+        # ==========================
+
+        st.metric(
+            "📄 ATS Score",
+            f"{ats_score:.0f}%"
+        )
 
         st.progress(int(ats_score))
 
-        st.subheader("✅ Matched Skills")
+        # ==========================
+        # Skills Found
+        # ==========================
 
-        for skill in matched_skills:
-            st.success(skill)
+        st.subheader("✅ Skills Found")
+
+        if resume_skills:
+
+            for skill in resume_skills:
+
+                st.success(skill.title())
+
+        else:
+
+            st.error("No skills detected.")
+
+        # ==========================
+        # Matched Skills
+        # ==========================
+
+        st.subheader("🎯 Matched Skills")
+
+        if matched_skills:
+
+            for skill in matched_skills:
+
+                st.success(skill.title())
+
+        else:
+
+            st.warning("No matched skills.")
+
+        # ==========================
+        # Missing Skills
+        # ==========================
 
         st.subheader("❌ Missing Skills")
 
-        for skill in missing_skills:
-            st.error(skill)
+        if missing_skills:
 
+            for skill in missing_skills:
+
+                st.error(skill.title())
+
+        else:
+
+            st.success("Excellent! No missing skills.")
 
 elif menu == "🧠 Skill Gap":
 
