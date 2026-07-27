@@ -424,91 +424,216 @@ elif menu == "💼 Job Recommendation":
                 with st.expander("View Job Description"):
                     st.write(row["Job Description"])
 
-
 elif menu == "📈 Salary Analytics":
 
     st.title("📈 Salary Analytics Dashboard")
 
-    # Average Salary by Experience Level
-    avg_salary = salary_df.groupby("experience_level")["salary_in_usd"].mean().reset_index()
+    st.markdown("Explore salary trends in the Data Science job market.")
 
-    fig1 = px.bar(
+    # ===========================
+    # Remove unwanted column
+    # ===========================
+
+    salary_df = salary_df.drop(columns=["Unnamed: 0"], errors="ignore")
+
+    # ===========================
+    # KPI Cards
+    # ===========================
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.metric(
+            "💰 Average Salary",
+            f"${salary_df['salary_in_usd'].mean():,.0f}"
+        )
+
+    with col2:
+        st.metric(
+            "📈 Highest Salary",
+            f"${salary_df['salary_in_usd'].max():,.0f}"
+        )
+
+    with col3:
+        st.metric(
+            "📉 Lowest Salary",
+            f"${salary_df['salary_in_usd'].min():,.0f}"
+        )
+
+    with col4:
+        st.metric(
+            "🌍 Countries",
+            salary_df["company_location"].nunique()
+        )
+
+    st.markdown("---")
+
+    # ===========================
+    # Dataset Preview
+    # ===========================
+
+    st.subheader("📄 Salary Dataset Preview")
+
+    st.dataframe(salary_df.head())
+
+    # ===========================
+    # Average Salary by Experience
+    # ===========================
+
+    st.subheader("💼 Average Salary by Experience Level")
+
+    avg_salary = salary_df.groupby(
+        "experience_level"
+    )["salary_in_usd"].mean().sort_values()
+
+    fig = px.bar(
         avg_salary,
-        x="experience_level",
-        y="salary_in_usd",
+        x=avg_salary.index,
+        y=avg_salary.values,
+        labels={
+            "x": "Experience Level",
+            "y": "Average Salary (USD)"
+        },
+        color=avg_salary.values,
         title="Average Salary by Experience Level"
     )
 
-    st.plotly_chart(fig1, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)
 
-    # Company Size Distribution
-    fig2 = px.pie(
+    # ===========================
+    # Salary Distribution
+    # ===========================
+
+    st.subheader("📊 Salary Distribution")
+
+    fig = px.histogram(
         salary_df,
-        names="company_size",
-        title="Company Size Distribution"
+        x="salary_in_usd",
+        nbins=30,
+        title="Salary Distribution"
     )
 
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)
 
-    # Top Hiring Countries
-    top_country = salary_df["company_location"].value_counts().head(10)
+    # ===========================
+    # Top 10 Highest Paying Jobs
+    # ===========================
 
-    fig3 = px.bar(
-        x=top_country.index,
-        y=top_country.values,
-        labels={"x":"Country","y":"Jobs"},
-        title="Top Hiring Countries"
+    st.subheader("🏆 Top 10 Highest Paying Job Titles")
+
+    top_jobs = salary_df.groupby(
+        "job_title"
+    )["salary_in_usd"].mean().sort_values(
+        ascending=False
+    ).head(10)
+
+    fig = px.bar(
+        top_jobs,
+        x=top_jobs.values,
+        y=top_jobs.index,
+        orientation="h",
+        labels={
+            "x": "Average Salary (USD)",
+            "y": "Job Title"
+        },
+        color=top_jobs.values
     )
 
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)
 
+    # ===========================
     # Remote Work Distribution
-    fig4 = px.histogram(
-        salary_df,
-        x="remote_ratio",
-        title="Remote Work Distribution"
+    # ===========================
+
+    st.subheader("🏠 Remote Work Distribution")
+
+    remote = salary_df["remote_ratio"].value_counts()
+
+    fig = px.pie(
+        values=remote.values,
+        names=remote.index,
+        title="Remote Work Ratio"
     )
 
-    st.plotly_chart(fig4, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)
 
-elif menu == "💰 Salary Prediction":
+    # ===========================
+    # Company Size Distribution
+    # ===========================
 
-    st.title("💰 Salary Prediction")
+    st.subheader("🏢 Company Size Distribution")
 
-    model = joblib.load("salary_prediction_model.pkl")
+    company = salary_df["company_size"].value_counts()
 
-    experience = st.number_input("Experience Level", min_value=0, max_value=4, value=2)
-    employment = st.number_input("Employment Type", min_value=0, max_value=3, value=0)
-    job_title = st.number_input("Job Title", min_value=0, value=10)
-    salary_currency = st.number_input("Salary Currency", min_value=0, value=0)
-    residence = st.number_input("Employee Residence", min_value=0, value=20)
-    remote = st.number_input("Remote Ratio", min_value=0, max_value=100, value=100)
-    company_location = st.number_input("Company Location", min_value=0, value=20)
-    company_size = st.number_input("Company Size", min_value=0, max_value=2, value=1)
+    fig = px.pie(
+        values=company.values,
+        names=company.index,
+        title="Company Size"
+    )
 
-    if st.button("Predict Salary"):
+    st.plotly_chart(fig, use_container_width=True)
 
-        sample = pd.DataFrame([[2023, experience, employment, job_title,
-                                salary_currency, residence, remote,
-                                company_location, company_size]],
-                              columns=[
-                                  "work_year",
-                                  "experience_level",
-                                  "employment_type",
-                                  "job_title",
-                                  "salary_currency",
-                                  "employee_residence",
-                                  "remote_ratio",
-                                  "company_location",
-                                  "company_size"
-                              ])
+    # ===========================
+    # Top Hiring Countries
+    # ===========================
 
-        prediction = model.predict(sample)
+    st.subheader("🌍 Top Hiring Countries")
 
-        usd_to_inr = 87
-        salary_inr = prediction[0] * usd_to_inr
+    countries = salary_df["company_location"].value_counts().head(10)
 
-        st.success(f"💰 Predicted Salary: ₹ {salary_inr:,.0f}")
+    fig = px.bar(
+        countries,
+        x=countries.index,
+        y=countries.values,
+        labels={
+            "x": "Country",
+            "y": "Jobs"
+        },
+        color=countries.values
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    # ===========================
+    # Employment Type
+    # ===========================
+
+    st.subheader("📋 Employment Type")
+
+    employment = salary_df["employment_type"].value_counts()
+
+    fig = px.bar(
+        employment,
+        x=employment.index,
+        y=employment.values,
+        color=employment.values
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    # ===========================
+    # Salary by Company Size
+    # ===========================
+
+    st.subheader("💵 Salary by Company Size")
+
+    salary_company = salary_df.groupby(
+        "company_size"
+    )["salary_in_usd"].mean()
+
+    fig = px.bar(
+        salary_company,
+        x=salary_company.index,
+        y=salary_company.values,
+        labels={
+            "x": "Company Size",
+            "y": "Average Salary (USD)"
+        },
+        color=salary_company.values
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
 
 elif menu == "ℹ️ About":
 
