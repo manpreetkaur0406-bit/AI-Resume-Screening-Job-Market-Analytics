@@ -634,7 +634,6 @@ elif menu == "📈 Salary Analytics":
 
     st.plotly_chart(fig, use_container_width=True)
 
-
 elif menu == "ℹ️ About":
 
     st.title("ℹ️ About Project")
