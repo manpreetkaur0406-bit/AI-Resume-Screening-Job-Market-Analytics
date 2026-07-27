@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.express as px
 import joblib
+import pdfplumber
 
 try:
     resume_df = pd.read_csv("resume_data.csv")
