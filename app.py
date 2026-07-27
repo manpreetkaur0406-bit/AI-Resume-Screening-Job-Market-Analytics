@@ -83,22 +83,36 @@ elif menu == "📄 ATS Score":
 
     uploaded_file = st.file_uploader(
         "Upload Resume",
-        type=["pdf"]
+        type=["pdf", "docx"],
+        help="Supported formats: PDF, DOCX"
     )
 
+    # No resume uploaded
     if uploaded_file is None:
 
-        st.info("📄 Please upload your resume.")
+        st.info("📂 Please upload your resume in PDF or DOCX format.")
 
-    else:
+        st.stop()
 
-        st.success("✅ Resume uploaded successfully!")
+    # Invalid file
+    if uploaded_file.type not in [
+        "application/pdf",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ]:
 
-        # ==========================
-        # Read PDF
-        # ==========================
+        st.error("❌ Only PDF and DOCX files are supported.")
 
-        resume_text = ""
+        st.stop()
+
+    st.success("✅ Resume uploaded successfully!")
+
+    # ==========================
+    # Extract Resume Text
+    # ==========================
+
+    resume_text = ""
+
+    if uploaded_file.type == "application/pdf":
 
         with pdfplumber.open(uploaded_file) as pdf:
 
@@ -107,147 +121,181 @@ elif menu == "📄 ATS Score":
                 text = page.extract_text()
 
                 if text:
-                    resume_text += text.lower()
 
-        # ==========================
-        # Skill Database
-        # ==========================
+                    resume_text += text.lower() + " "
 
-        skill_database = [
+    else:
 
-            "python",
-            "sql",
-            "excel",
-            "power bi",
-            "tableau",
-            "machine learning",
-            "deep learning",
-            "statistics",
-            "data science",
-            "pandas",
-            "numpy",
-            "scikit-learn",
-            "tensorflow",
-            "keras",
-            "aws",
-            "azure",
-            "git",
-            "docker",
-            "linux",
-            "mysql",
-            "postgresql",
-            "mongodb",
-            "communication",
-            "problem solving"
+        doc = Document(uploaded_file)
 
-        ]
+        for para in doc.paragraphs:
 
-        # ==========================
-        # Extract Skills
-        # ==========================
+            resume_text += para.text.lower() + " "
 
-        resume_skills = []
+    # ==========================
+    # Skill Database
+    # ==========================
 
-        for skill in skill_database:
+    skill_database = [
 
-            if skill.lower() in resume_text:
+        "python",
+        "sql",
+        "excel",
+        "power bi",
+        "tableau",
+        "machine learning",
+        "deep learning",
+        "statistics",
+        "data science",
+        "pandas",
+        "numpy",
+        "scikit-learn",
+        "tensorflow",
+        "keras",
+        "aws",
+        "azure",
+        "git",
+        "github",
+        "docker",
+        "linux",
+        "mysql",
+        "postgresql",
+        "mongodb",
+        "communication",
+        "problem solving",
+        "critical thinking",
+        "teamwork"
 
-                resume_skills.append(skill)
+    ]
 
-        # Save for Job Recommendation page
+    # ==========================
+    # Extract Skills
+    # ==========================
 
-        st.session_state["resume_skills"] = resume_skills
+    resume_skills = []
 
-        # ==========================
-        # Required Skills
-        # ==========================
+    for skill in skill_database:
 
-        required_skills = [
+        if skill in resume_text:
 
-            "python",
-            "sql",
-            "excel",
-            "power bi",
-            "machine learning",
-            "statistics",
-            "git",
-            "communication"
+            resume_skills.append(skill)
 
-        ]
+    resume_skills = sorted(list(set(resume_skills)))
 
-        matched_skills = list(
-            set(resume_skills) &
-            set(required_skills)
-        )
+    st.session_state["resume_skills"] = resume_skills
 
-        missing_skills = list(
-            set(required_skills) -
-            set(resume_skills)
-        )
+    # ==========================
+    # Required Skills
+    # ==========================
 
-        ats_score = (
-            len(matched_skills) /
-            len(required_skills)
-        ) * 100
+    required_skills = [
 
-        # ==========================
-        # Display ATS Score
-        # ==========================
+        "python",
+        "sql",
+        "excel",
+        "power bi",
+        "machine learning",
+        "statistics",
+        "git",
+        "communication"
 
-        st.metric(
-            "📄 ATS Score",
-            f"{ats_score:.0f}%"
-        )
+    ]
 
-        st.progress(int(ats_score))
+    matched_skills = list(
+        set(resume_skills) &
+        set(required_skills)
+    )
 
-        # ==========================
-        # Skills Found
-        # ==========================
+    missing_skills = list(
+        set(required_skills) -
+        set(resume_skills)
+    )
 
-        st.subheader("✅ Skills Found")
+    ats_score = (
+        len(matched_skills) /
+        len(required_skills)
+    ) * 100
 
-        if resume_skills:
+    # ==========================
+    # ATS Score
+    # ==========================
 
-            for skill in resume_skills:
+    st.subheader("📊 ATS Score")
 
-                st.success(skill.title())
+    st.metric(
+        "Score",
+        f"{ats_score:.0f}%"
+    )
 
-        else:
+    st.progress(int(ats_score))
 
-            st.error("No skills detected.")
+    # ==========================
+    # Skills Found
+    # ==========================
 
-        # ==========================
-        # Matched Skills
-        # ==========================
+    st.subheader("✅ Skills Found")
 
-        st.subheader("🎯 Matched Skills")
+    if resume_skills:
 
-        if matched_skills:
+        st.write(", ".join(resume_skills))
 
-            for skill in matched_skills:
+    else:
 
-                st.success(skill.title())
+        st.warning("No skills detected in the uploaded resume.")
 
-        else:
+    # ==========================
+    # Matched Skills
+    # ==========================
 
-            st.warning("No matched skills.")
+    st.subheader("🎯 Matched Skills")
 
-        # ==========================
-        # Missing Skills
-        # ==========================
+    if matched_skills:
 
-        st.subheader("❌ Missing Skills")
+        for skill in matched_skills:
 
-        if missing_skills:
+            st.success(skill.title())
 
-            for skill in missing_skills:
+    else:
 
-                st.error(skill.title())
+        st.warning("No matching skills found.")
 
-        else:
+    # ==========================
+    # Missing Skills
+    # ==========================
 
-            st.success("Excellent! No missing skills.")
+    st.subheader("❌ Missing Skills")
+
+    if missing_skills:
+
+        for skill in missing_skills:
+
+            st.error(skill.title())
+
+    else:
+
+        st.success("Excellent! Your resume contains all required skills.")
+
+    # ==========================
+    # ATS Feedback
+    # ==========================
+
+    st.subheader("💡 ATS Feedback")
+
+    if ats_score >= 80:
+
+        st.success("Excellent resume! Your profile matches most of the required skills.")
+
+    elif ats_score >= 60:
+
+        st.info("Good resume. Adding the missing skills can improve your ATS score.")
+
+    elif ats_score >= 40:
+
+        st.warning("Average ATS score. Consider improving your technical skills and resume.")
+
+    else:
+
+        st.error("Low ATS score. Add more relevant technical skills to improve your chances.")
 
 elif menu == "🧠 Skill Gap":
 
