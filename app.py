@@ -79,53 +79,68 @@ elif menu == "📊 EDA":
 elif menu == "📄 ATS Score":
 
     st.title("📄 ATS Resume Score")
+
     uploaded_file = st.file_uploader(
         "Upload Resume",
         type=["pdf", "docx"]
     )
 
-    if uploaded_file is not None:
+    if uploaded_file is None:
+        st.info("📄 Please upload your resume to calculate the ATS score.")
 
-    # Extract text
-    # Extract skills
-    # Calculate ATS
-        st.success("Resume uploaded successfully!")
-    
+    else:
 
-    # Resume skills
-    resume_skills = [
-        "python",
-        "machine learning",
-        "sql",
-        "data science",
-        "statistics"
-    ]
+        st.success("✅ Resume uploaded successfully!")
 
-    # Required job skills
-    required_skills = [
-        "python",
-        "sql",
-        "statistics",
-        "aws",
-        "git"
-    ]
+        # Temporary resume skills
+        # (Later these will come from the uploaded resume)
+        resume_skills = [
+            "python",
+            "machine learning",
+            "sql",
+            "data science",
+            "statistics"
+        ]
 
-    # Find matched skills
-    matched_skills = list(set(resume_skills) & set(required_skills))
+        # Required job skills
+        required_skills = [
+            "python",
+            "sql",
+            "statistics",
+            "aws",
+            "git"
+        ]
 
-    # Calculate ATS score
-    ats_score = (len(matched_skills) / len(required_skills)) * 100
+        # Matched skills
+        matched_skills = list(
+            set(resume_skills) & set(required_skills)
+        )
 
-    st.metric("ATS Score", f"{ats_score:.0f}%")
+        # Missing skills
+        missing_skills = list(
+            set(required_skills) - set(resume_skills)
+        )
 
-    st.subheader("✅ Matched Skills")
-    st.write(matched_skills)
+        # ATS Score
+        ats_score = (
+            len(matched_skills) /
+            len(required_skills)
+        ) * 100
 
-    missing_skills = list(set(required_skills) - set(resume_skills))
+        st.metric("📄 ATS Score", f"{ats_score:.0f}%")
 
-    st.subheader("❌ Missing Skills")
-    st.write(missing_skills)
-    st.metric("ATS Score","85%")
+        st.progress(int(ats_score))
+
+        st.subheader("✅ Matched Skills")
+
+        for skill in matched_skills:
+            st.success(skill)
+
+        st.subheader("❌ Missing Skills")
+
+        for skill in missing_skills:
+            st.error(skill)
+
 
 elif menu == "🧠 Skill Gap":
 
