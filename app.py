@@ -442,30 +442,30 @@ elif menu == "📈 Salary Analytics":
 
     col1, col2, col3, col4 = st.columns(4)
 
-    with col1:
-        st.metric(
-            "💰 Average Salary",
-            f"${salary_df['salary_in_usd'].mean():,.0f}"
-        )
+with col1:
+    st.metric(
+        "💰 Average Salary",
+        f"₹ {salary_df['salary_inr'].mean():,.0f}"
+    )
 
-    with col2:
-        st.metric(
-            "📈 Highest Salary",
-            f"${salary_df['salary_in_usd'].max():,.0f}"
-        )
+with col2:
+    st.metric(
+        "📈 Highest Salary",
+        f"₹ {salary_df['salary_inr'].max():,.0f}"
+    )
 
-    with col3:
-        st.metric(
-            "📉 Lowest Salary",
-            f"${salary_df['salary_in_usd'].min():,.0f}"
-        )
+with col3:
+    st.metric(
+        "📉 Lowest Salary",
+        f"₹ {salary_df['salary_inr'].min():,.0f}"
+    )
 
-    with col4:
-        st.metric(
-            "🌍 Countries",
-            salary_df["company_location"].nunique()
-        )
-
+with col4:
+    st.metric(
+        "🌍 Countries",
+        salary_df["company_location"].nunique()
+    )
+    
     st.markdown("---")
 
     # ===========================
