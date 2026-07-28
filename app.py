@@ -101,7 +101,7 @@ elif menu == "📄 ATS Score":
     ]:
 
         st.error("❌ Only PDF and DOCX files are supported.")
-
+        st.session_state["resume_skills"]
         st.stop()
 
     st.success("✅ Resume uploaded successfully!")
