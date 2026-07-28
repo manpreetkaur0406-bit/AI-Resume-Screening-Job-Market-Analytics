@@ -641,110 +641,148 @@ elif menu == "📈 Salary Analytics":
     )
 
     st.plotly_chart(fig, use_container_width=True)
-
-
 elif menu == "💰 Salary Prediction":
 
-    st.title("💰 Salary Prediction")
+    st.title("💰 AI Salary Prediction")
 
-    st.write("Predict your expected annual salary in Indian Rupees (₹).")
+    st.write(
+        "Estimate your expected annual salary in India based on your job role and experience."
+    )
 
     st.markdown("---")
 
-    # ==========================
+    # ===============================
     # User Inputs
-    # ==========================
+    # ===============================
 
-    experience = st.selectbox(
-        "Experience Level",
-        sorted(salary_df["experience_level"].dropna().unique())
+    job_role = st.selectbox(
+        "💼 Select Job Role",
+        [
+            "Data Analyst",
+            "Business Analyst",
+            "Data Scientist",
+            "Machine Learning Engineer",
+            "AI Engineer",
+            "Data Engineer",
+            "Python Developer",
+            "BI Developer"
+        ]
     )
 
-    employment = st.selectbox(
-        "Employment Type",
-        sorted(salary_df["employment_type"].dropna().unique())
+    experience = st.slider(
+        "👨‍💻 Years of Experience",
+        0,
+        20,
+        0
     )
-
-    job_title = st.selectbox(
-        "Job Title",
-        sorted(salary_df["job_title"].dropna().unique())
-    )
-
-    salary_currency = "USD"
-
-    residence = st.selectbox(
-        "Employee Residence",
-        sorted(salary_df["employee_residence"].dropna().unique())
-    )
-
-    remote = st.selectbox(
-        "Remote Ratio",
-        sorted(salary_df["remote_ratio"].dropna().unique())
-    )
-
-    company_location = st.selectbox(
-        "Company Location",
-        sorted(salary_df["company_location"].dropna().unique())
-    )
-
-    company_size = st.selectbox(
-        "Company Size",
-        sorted(salary_df["company_size"].dropna().unique())
-    )
-
-    work_year = 2025
 
     st.markdown("---")
 
     if st.button("💰 Predict Salary"):
 
-        sample = pd.DataFrame([[
-            work_year,
-            experience,
-            employment,
-            job_title,
-            salary_currency,
-            residence,
-            remote,
-            company_location,
-            company_size
-        ]], columns=[
-            "work_year",
-            "experience_level",
-            "employment_type",
-            "job_title",
-            "salary_currency",
-            "employee_residence",
-            "remote_ratio",
-            "company_location",
-            "company_size"
-        ])
+        # Base Salaries (Annual INR)
 
-        prediction = model.predict(sample)
+        base_salary = {
 
-        # Convert USD to INR
-        usd_to_inr = 87
+            "Data Analyst": 500000,
+            "Business Analyst": 600000,
+            "Data Scientist": 800000,
+            "Machine Learning Engineer": 900000,
+            "AI Engineer": 1000000,
+            "Data Engineer": 850000,
+            "Python Developer": 550000,
+            "BI Developer": 650000
 
-        salary_inr = prediction[0] * usd_to_inr
+        }
 
-        st.success(f"🎉 Estimated Annual Salary")
+        salary = base_salary[job_role]
 
-        st.metric(
-            "Predicted Salary",
-            f"₹ {salary_inr:,.0f}"
+        # Experience Increment
+
+        if experience == 0:
+            salary = salary
+
+        elif experience <= 2:
+            salary *= 1.20
+
+        elif experience <= 5:
+            salary *= 1.60
+
+        elif experience <= 8:
+            salary *= 2.20
+
+        elif experience <= 12:
+            salary *= 2.90
+
+        else:
+            salary *= 3.60
+
+        salary = int(salary)
+
+        monthly_salary = int(salary / 12)
+
+        lower = int(salary * 0.90)
+
+        upper = int(salary * 1.10)
+
+        st.success("🎉 Salary Prediction Completed")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+
+            st.metric(
+                "Annual Salary",
+                f"₹ {salary:,.0f}"
+            )
+
+        with col2:
+
+            st.metric(
+                "Monthly Salary",
+                f"₹ {monthly_salary:,.0f}"
+            )
+
+        st.progress(100)
+
+        st.info(
+            f"📊 Estimated Salary Range : ₹ {lower:,.0f}  -  ₹ {upper:,.0f}"
         )
 
-        st.info("📌 This is an estimated annual salary based on the selected job profile.")
+        st.markdown("---")
 
-        st.subheader("📋 Selected Details")
+        st.subheader("📋 Prediction Summary")
 
-        st.write(f"**Job Title:** {job_title}")
-        st.write(f"**Experience Level:** {experience}")
-        st.write(f"**Employment Type:** {employment}")
-        st.write(f"**Employee Residence:** {residence}")
-        st.write(f"**Company Location:** {company_location}")
-        st.write(f"**Company Size:** {company_size}")
-        st.write(f"**Remote Ratio:** {remote}%")
+        st.write(f"**Job Role :** {job_role}")
+
+        st.write(f"**Experience :** {experience} Years")
+
+        if experience == 0:
+
+            level = "Fresher"
+
+        elif experience <= 2:
+
+            level = "Junior"
+
+        elif experience <= 5:
+
+            level = "Mid-Level"
+
+        elif experience <= 8:
+
+            level = "Senior"
+
+        else:
+
+            level = "Expert"
+
+        st.write(f"**Experience Level :** {level}")
+
+        st.success(
+            "This prediction is based on current Data Science and Analytics salary trends in India."
+        )
+
 
 elif menu == "ℹ️ About":
 
