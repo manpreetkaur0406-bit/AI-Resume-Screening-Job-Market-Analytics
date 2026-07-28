@@ -138,35 +138,42 @@ elif menu == "📄 ATS Score":
 
     skill_database = [
 
-        "python",
-        "sql",
-        "excel",
-        "power bi",
-        "tableau",
-        "machine learning",
-        "deep learning",
-        "statistics",
-        "data science",
-        "pandas",
-        "numpy",
-        "scikit-learn",
-        "tensorflow",
-        "keras",
-        "aws",
-        "azure",
-        "git",
-        "github",
-        "docker",
-        "linux",
-        "mysql",
-        "postgresql",
-        "mongodb",
-        "communication",
-        "problem solving",
-        "critical thinking",
-        "teamwork"
+    "python",
+    "sql",
+    "excel",
+    "power bi",
+    "tableau",
+    "machine learning",
+    "deep learning",
+    "statistics",
+    "data science",
+    "pandas",
+    "numpy",
+    "scikit-learn",
+    "tensorflow",
+    "keras",
+    "aws",
+    "azure",
+    "git",
+    "github",
+    "docker",
+    "linux",
+    "mysql",
+    "postgresql",
+    "mongodb",
+    "oracle",
+    "r",
+    "spark",
+    "hadoop",
+    "flask",
+    "streamlit",
+    "opencv",
+    "nlp",
+    "computer vision",
+    "matplotlib",
+    "plotly"
 
-    ]
+]
 
     # ==========================
     # Extract Skills
@@ -190,17 +197,17 @@ elif menu == "📄 ATS Score":
 
     required_skills = [
 
-        "python",
-        "sql",
-        "excel",
-        "power bi",
-        "machine learning",
-        "statistics",
-        "git",
-        "communication"
+    "python",
+    "sql",
+    "excel",
+    "power bi",
+    "machine learning",
+    "statistics",
+    "git",
+    "pandas"
 
-    ]
-
+]
+   
     matched_skills = list(
         set(resume_skills) &
         set(required_skills)
@@ -298,6 +305,9 @@ elif menu == "📄 ATS Score":
         st.error("Low ATS score. Add more relevant technical skills to improve your chances.")
 
 
+elif menu == "🧠 Skill Gap":
+
+    st.title("🧠 Skill Gap Analysis")
     
 elif menu == "💼 Job Recommendation":
 
@@ -322,6 +332,11 @@ elif menu == "💼 Job Recommendation":
 
         recommendations = []
 
+
+        candidate_skills = [
+            skill.lower()
+            for skill in st.session_state["resume_skills"]
+]
         # Calculate Match Score
         for _, row in jobs_df.iterrows():
 
@@ -331,7 +346,7 @@ elif menu == "💼 Job Recommendation":
 
             for skill in candidate_skills:
 
-                if skill.lower() in description:
+                if skill in description:
                     score += 1
 
             recommendations.append(score)
@@ -339,19 +354,29 @@ elif menu == "💼 Job Recommendation":
         jobs_df["Match Score"] = recommendations
 
         # Keep only jobs with at least one matching skill
-        top_jobs = jobs_df[jobs_df["Match Score"] > 0]
+        top_jobs = jobs_df[jobs_df["Match Score"] >= 2]
 
-        # If no jobs matched
-        if top_jobs.empty:
+if top_jobs.empty:
 
-            st.error("❌ No jobs recommended for your resume.")
+    st.error("❌ No jobs recommended for your resume.")
 
-        else:
+else:
 
-            top_jobs = top_jobs.sort_values(
-                by="Match Score",
-                ascending=False
-            ).head(10)
+    top_jobs = top_jobs.sort_values(
+        by="Match Score",
+        ascending=False
+    ).head(10)
+
+    st.dataframe(
+        top_jobs[
+            [
+                "Job Title",
+                "Company Name",
+                "Location",
+                "Match Score"
+            ]
+        ]
+    )
 
             st.success(f"✅ {len(top_jobs)} Matching Jobs Found")
 
@@ -379,9 +404,6 @@ elif menu == "💼 Job Recommendation":
                     st.write(row["Job Description"])
                     
 
-elif menu == "🧠 Skill Gap":
-
-    st.title("🧠 Skill Gap Analysis")
     
 elif menu == "📈 Salary Analytics":
 
