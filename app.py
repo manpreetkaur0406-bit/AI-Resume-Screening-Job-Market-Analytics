@@ -243,13 +243,9 @@ elif menu == "📄 ATS Score":
     st.subheader("✅ Skills Found")
 
     if resume_skills:
-
-        st.write(", ".join(resume_skills))
-
-    else:
-
-        st.warning("No skills detected in the uploaded resume.")
-
+    st.write(", ".join(resume_skills))
+else:
+    st.warning("No technical skills found in the uploaded resume.")
     # ==========================
     # Matched Skills
     # ==========================
