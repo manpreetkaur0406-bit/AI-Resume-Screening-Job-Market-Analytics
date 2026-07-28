@@ -305,13 +305,7 @@ elif menu == "💼 Job Recommendation":
 
     st.title("💼 AI Job Recommendation")
 
-    candidate_skills = [
-        "python",
-        "machine learning",
-        "sql",
-        "statistics",
-        "data science"
-    ]
+    candidate_skills = st.session_state["resume_skills"]
 
     recommendations = []
 
