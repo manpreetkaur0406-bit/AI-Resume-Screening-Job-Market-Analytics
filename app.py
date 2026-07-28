@@ -356,27 +356,27 @@ elif menu == "💼 Job Recommendation":
         # Keep only jobs with at least one matching skill
         top_jobs = jobs_df[jobs_df["Match Score"] >= 2]
 
-if top_jobs.empty:
+        if top_jobs.empty:
 
-    st.error("❌ No jobs recommended for your resume.")
+             st.error("❌ No jobs recommended for your resume.")
 
-else:
+        else:
 
-    top_jobs = top_jobs.sort_values(
-        by="Match Score",
-        ascending=False
-    ).head(10)
+             top_jobs = top_jobs.sort_values(
+                   by="Match Score",
+                   ascending=False
+             ).head(10)
 
-    st.dataframe(
-        top_jobs[
-            [
-                "Job Title",
-                "Company Name",
-                "Location",
-                "Match Score"
-            ]
-        ]
-    )
+             st.dataframe(
+                 top_jobs[
+                     [
+                         "Job Title",
+                         "Company Name",
+                         "Location",
+                         "Match Score"
+                     ]
+                  ]
+             )
 
             st.success(f"✅ {len(top_jobs)} Matching Jobs Found")
 
