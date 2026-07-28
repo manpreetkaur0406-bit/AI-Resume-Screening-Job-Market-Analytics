@@ -378,7 +378,8 @@ elif menu == "💼 Job Recommendation":
                   ]
              )
 
-            st.success(f"✅ {len(top_jobs)} Matching Jobs Found")
+              st.success(f"✅ {len(top_jobs)} Matching Jobs Found")
+            
 
             for _, row in top_jobs.iterrows():
 
