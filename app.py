@@ -297,9 +297,7 @@ elif menu == "📄 ATS Score":
 
         st.error("Low ATS score. Add more relevant technical skills to improve your chances.")
 
-elif menu == "🧠 Skill Gap":
 
-    st.title("🧠 Skill Gap Analysis")
     
 elif menu == "💼 Job Recommendation":
 
@@ -381,6 +379,10 @@ elif menu == "💼 Job Recommendation":
                     st.write(row["Job Description"])
                     
 
+elif menu == "🧠 Skill Gap":
+
+    st.title("🧠 Skill Gap Analysis")
+    
 elif menu == "📈 Salary Analytics":
 
     st.title("📈 Salary Analytics Dashboard")
