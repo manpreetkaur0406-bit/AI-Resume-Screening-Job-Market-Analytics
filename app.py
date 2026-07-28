@@ -642,6 +642,110 @@ elif menu == "📈 Salary Analytics":
 
     st.plotly_chart(fig, use_container_width=True)
 
+
+elif menu == "💰 Salary Prediction":
+
+    st.title("💰 Salary Prediction")
+
+    st.write("Predict your expected annual salary in Indian Rupees (₹).")
+
+    st.markdown("---")
+
+    # ==========================
+    # User Inputs
+    # ==========================
+
+    experience = st.selectbox(
+        "Experience Level",
+        sorted(salary_df["experience_level"].dropna().unique())
+    )
+
+    employment = st.selectbox(
+        "Employment Type",
+        sorted(salary_df["employment_type"].dropna().unique())
+    )
+
+    job_title = st.selectbox(
+        "Job Title",
+        sorted(salary_df["job_title"].dropna().unique())
+    )
+
+    salary_currency = "USD"
+
+    residence = st.selectbox(
+        "Employee Residence",
+        sorted(salary_df["employee_residence"].dropna().unique())
+    )
+
+    remote = st.selectbox(
+        "Remote Ratio",
+        sorted(salary_df["remote_ratio"].dropna().unique())
+    )
+
+    company_location = st.selectbox(
+        "Company Location",
+        sorted(salary_df["company_location"].dropna().unique())
+    )
+
+    company_size = st.selectbox(
+        "Company Size",
+        sorted(salary_df["company_size"].dropna().unique())
+    )
+
+    work_year = 2025
+
+    st.markdown("---")
+
+    if st.button("💰 Predict Salary"):
+
+        sample = pd.DataFrame([[
+            work_year,
+            experience,
+            employment,
+            job_title,
+            salary_currency,
+            residence,
+            remote,
+            company_location,
+            company_size
+        ]], columns=[
+            "work_year",
+            "experience_level",
+            "employment_type",
+            "job_title",
+            "salary_currency",
+            "employee_residence",
+            "remote_ratio",
+            "company_location",
+            "company_size"
+        ])
+
+        prediction = model.predict(sample)
+
+        # Convert USD to INR
+        usd_to_inr = 87
+
+        salary_inr = prediction[0] * usd_to_inr
+
+        st.success(f"🎉 Estimated Annual Salary")
+
+        st.metric(
+            "Predicted Salary",
+            f"₹ {salary_inr:,.0f}"
+        )
+
+        st.info("📌 This is an estimated annual salary based on the selected job profile.")
+
+        st.subheader("📋 Selected Details")
+
+        st.write(f"**Job Title:** {job_title}")
+        st.write(f"**Experience Level:** {experience}")
+        st.write(f"**Employment Type:** {employment}")
+        st.write(f"**Employee Residence:** {residence}")
+        st.write(f"**Company Location:** {company_location}")
+        st.write(f"**Company Size:** {company_size}")
+        st.write(f"**Remote Ratio:** {remote}%")
+
 elif menu == "ℹ️ About":
 
     st.title("ℹ️ About Project")
