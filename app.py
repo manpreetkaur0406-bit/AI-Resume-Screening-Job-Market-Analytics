@@ -322,9 +322,13 @@ elif menu == "💼 Job Recommendation":
 
         candidate_skills = st.session_state["resume_skills"]
 
-        st.subheader("✅ Skills Found in Resume")
+        # Remove duplicate skills
+        candidate_skills = list(set(candidate_skills))
+
+        st.subheader("✅ Resume Skills")
 
         if len(candidate_skills) == 0:
+
             st.error("❌ No technical skills found in your resume.")
             st.stop()
 
@@ -332,11 +336,6 @@ elif menu == "💼 Job Recommendation":
 
         recommendations = []
 
-
-        candidate_skills = [
-            skill.lower()
-            for skill in st.session_state["resume_skills"]
-]
         # Calculate Match Score
         for _, row in jobs_df.iterrows():
 
@@ -346,40 +345,28 @@ elif menu == "💼 Job Recommendation":
 
             for skill in candidate_skills:
 
-                if skill in description:
+                if skill.lower() in description:
                     score += 1
 
             recommendations.append(score)
 
         jobs_df["Match Score"] = recommendations
 
-        # Keep only jobs with at least one matching skill
+        # Keep only jobs with at least 2 matched skills
         top_jobs = jobs_df[jobs_df["Match Score"] >= 2]
 
         if top_jobs.empty:
 
-             st.error("❌ No jobs recommended for your resume.")
+            st.error("❌ No jobs recommended for your resume.")
 
         else:
 
-             top_jobs = top_jobs.sort_values(
-                   by="Match Score",
-                   ascending=False
-             ).head(10)
+            top_jobs = top_jobs.sort_values(
+                by="Match Score",
+                ascending=False
+            ).head(10)
 
-             st.dataframe(
-                 top_jobs[
-                     [
-                         "Job Title",
-                         "Company Name",
-                         "Location",
-                         "Match Score"
-                     ]
-                  ]
-             )
-
-              st.success(f"✅ {len(top_jobs)} Matching Jobs Found")
-            
+            st.success(f"🎯 {len(top_jobs)} Matching Jobs Found")
 
             for _, row in top_jobs.iterrows():
 
@@ -399,9 +386,9 @@ elif menu == "💼 Job Recommendation":
 
                 st.progress(match_percent)
 
-                st.write(f"⭐ Match : {match_percent}%")
+                st.write(f"⭐ Match Score : {match_percent}%")
 
-                with st.expander("View Job Description"):
+                with st.expander("📄 View Job Description"):
                     st.write(row["Job Description"])
                     
 
