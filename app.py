@@ -197,7 +197,7 @@ st.info(f"💼 Experience : {experience}")
     # Extract Resume Text
     # ==========================
 
-    resume_text = ""
+resume_text = ""
 
     if uploaded_file.type == "application/pdf":
 
