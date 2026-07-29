@@ -106,6 +106,94 @@ elif menu == "📄 ATS Score":
 
     st.success("✅ Resume uploaded successfully!")
 
+    # ==========================================
+# Resume Information
+# ==========================================
+
+import re
+
+st.markdown("---")
+st.subheader("👤 Resume Information")
+
+# Name
+name = "Not Found"
+
+lines = resume_text.split("\n")
+
+if len(lines) > 0:
+    name = lines[0].strip().title()
+
+# Email
+email = "Not Found"
+
+email_match = re.search(
+    r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
+    resume_text
+)
+
+if email_match:
+    email = email_match.group()
+
+# Phone
+phone = "Not Found"
+
+phone_match = re.search(
+    r"(\+91)?[\s-]?[6-9]\d{9}",
+    resume_text
+)
+
+if phone_match:
+    phone = phone_match.group()
+
+# Experience
+experience = "Fresher"
+
+exp_match = re.search(
+    r"(\d+)\s*(year|years)",
+    resume_text.lower()
+)
+
+if exp_match:
+    experience = exp_match.group()
+
+# Education
+education = "Not Found"
+
+education_keywords = [
+    "b.tech",
+    "b.e",
+    "m.tech",
+    "bca",
+    "mca",
+    "b.sc",
+    "m.sc",
+    "mba"
+]
+
+for edu in education_keywords:
+
+    if edu in resume_text.lower():
+
+        education = edu.upper()
+
+        break
+
+col1, col2 = st.columns(2)
+
+with col1:
+
+    st.info(f"👤 Name\n\n{name}")
+
+    st.info(f"📧 Email\n\n{email}")
+
+with col2:
+
+    st.info(f"📞 Phone\n\n{phone}")
+
+    st.info(f"🎓 Education\n\n{education}")
+
+st.info(f"💼 Experience : {experience}")
+
     # ==========================
     # Extract Resume Text
     # ==========================
