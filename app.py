@@ -504,6 +504,7 @@ else:
 
         st.write(tip)
 
+
 elif menu == "🧠 Skill Gap":
 
     st.title("🧠 Skill Gap Analysis")
