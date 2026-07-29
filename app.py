@@ -198,18 +198,12 @@ st.info(f"💼 Experience : {experience}")
     # ==========================
 
 resume_text = ""
-
-    if uploaded_file.type == "application/pdf":
-
-        with pdfplumber.open(uploaded_file) as pdf:
-
-            for page in pdf.pages:
-
-                text = page.extract_text()
-
-                if text:
-
-                    resume_text += text.lower() + " "
+if uploaded_file.type == "application/pdf":
+    with pdfplumber.open(uploaded_file) as pdf:
+        for page in pdf.pages:
+            text = page.extract_text()
+            if text:
+                resume_text += text.lower() + " "
 
     else:
 
