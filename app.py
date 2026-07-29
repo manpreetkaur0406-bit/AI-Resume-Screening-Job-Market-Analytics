@@ -204,57 +204,50 @@ if uploaded_file.type == "application/pdf":
             text = page.extract_text()
             if text:
                 resume_text += text.lower() + " "
-
-    else:
-
-        doc = Document(uploaded_file)
-
-        for para in doc.paragraphs:
-
-            resume_text += para.text.lower() + " "
+else:
+    doc = Document(uploaded_file)
+    for para in doc.paragraphs:
+        resume_text += para.text.lower() + " "
+        
 
     # ==========================
     # Skill Database
     # ==========================
-
-    skill_database = [
-
-    "python",
-    "sql",
-    "excel",
-    "power bi",
-    "tableau",
-    "machine learning",
-    "deep learning",
-    "statistics",
-    "data science",
-    "pandas",
-    "numpy",
-    "scikit-learn",
-    "tensorflow",
-    "keras",
-    "aws",
-    "azure",
-    "git",
-    "github",
-    "docker",
-    "linux",
-    "mysql",
-    "postgresql",
-    "mongodb",
-    "oracle",
-    "r",
-    "spark",
-    "hadoop",
-    "flask",
-    "streamlit",
-    "opencv",
-    "nlp",
-    "computer vision",
-    "matplotlib",
-    "plotly"
-
-]
+        skill_database = [
+            "python",
+            "sql",
+            "excel",
+            "power bi",
+            "tableau",
+            "machine learning",
+            "deep learning",
+            "statistics",
+            "data science",
+            "pandas",
+            "numpy",
+            "scikit-learn",
+            "tensorflow",
+            "keras",
+            "aws",
+            "azure",
+            "git",
+            "github",
+            "docker",
+            "linux",
+           "mysql",
+           "postgresql",
+           "mongodb",
+           "oracle",
+           "spark",
+           "hadoop",
+           "flask",
+           "streamlit",
+           "opencv",
+           "nlp",
+           "computer vision",
+           "matplotlib",
+           "plotly"
+        ]
 
     # ==========================
     # Extract Skills
