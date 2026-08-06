@@ -94,14 +94,86 @@ if menu == "🏠 Home":
         )
 
     st.markdown("---")
+ st.dataframe(jobs_df.head())
 elif menu == "📊 EDA":
 
     st.title("📊 Exploratory Data Analysis")
 
-    st.dataframe(resume_df.head())
-    st.dataframe(salary_df.head())
-    st.dataframe(jobs_df.head())
+    st.write("Explore salary trends and insights from the Data Science Job Market.")
 
+    st.markdown("---")
+
+    # ==========================
+    # Convert Salary to INR
+    # ==========================
+
+    salary_df["salary_in_inr"] = salary_df["salary_in_usd"] * 87
+
+    # ==========================
+    # Dashboard KPIs
+    # ==========================
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.metric(
+            "📄 Total Records",
+            len(salary_df)
+        )
+
+    with col2:
+        st.metric(
+            "💼 Job Titles",
+            salary_df["job_title"].nunique()
+        )
+
+    with col3:
+        st.metric(
+            "🌍 Countries",
+            salary_df["company_location"].nunique()
+        )
+
+    with col4:
+        st.metric(
+            "💰 Avg Salary",
+            f"₹{salary_df['salary_in_inr'].mean():,.0f}"
+        )
+
+    st.markdown("---")
+
+    # ==========================
+    # Filters
+    # ==========================
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        experience = st.selectbox(
+            "Experience Level",
+            ["All"] + sorted(salary_df["experience_level"].unique())
+        )
+
+    with col2:
+
+        employment = st.selectbox(
+            "Employment Type",
+            ["All"] + sorted(salary_df["employment_type"].unique())
+        )
+
+    filtered_df = salary_df.copy()
+
+    if experience != "All":
+        filtered_df = filtered_df[
+            filtered_df["experience_level"] == experience
+        ]
+
+    if employment != "All":
+        filtered_df = filtered_df[
+            filtered_df["employment_type"] == employment
+        ]
+
+    st.markdown("---")
 elif menu == "📄 ATS Score":
 
     st.title("📄 ATS Resume Score")
