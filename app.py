@@ -310,15 +310,15 @@ elif menu == "📊 EDA":
             title="Salary Distribution (₹)",
             labels={"salary_in_inr": "Salary (INR)"}
         )
-        fig.update_layout(
+    fig.update_layout(
             xaxis_title="Salary (₹)",
             yaxis_title="Number of Employees"
         )
-        st.plotly_chart(fig, use_container_width=True)
-        st.info(
-            f"Average salary in the selected dataset is ₹{filtered_df['salary_in_inr'].mean():,.0f}"
-        )
-        st.markdown("---")
+    st.plotly_chart(fig, use_container_width=True)
+    st.info(
+        f"Average salary in the selected dataset is ₹{filtered_df['salary_in_inr'].mean():,.0f}"
+    )
+    st.markdown("---")
 
 
 # =====================================
