@@ -300,10 +300,9 @@ elif menu == "📊 EDA":
 
     st.markdown("---")
     # =====================================
-# 📊 Salary Distribution
-# =====================================
-
-st.subheader("📊 Salary Distribution")
+    # 📊 Salary Distribution
+    # =====================================
+    st.subheader("📊 Salary Distribution")
 
 fig = px.histogram(
     filtered_df,
@@ -489,6 +488,7 @@ fig.update_layout(
 st.plotly_chart(fig, use_container_width=True)
 
 st.markdown("---")
+
 elif menu == "📄 ATS Score":
 
     st.title("📄 ATS Resume Score")
