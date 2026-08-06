@@ -175,7 +175,7 @@ elif menu == "📊 EDA":
         ]
 
     st.markdown("---")
-        st.subheader("📄 Dataset Preview")
+    st.subheader("📄 Dataset Preview")
 
     st.dataframe(filtered_df.head())
 
