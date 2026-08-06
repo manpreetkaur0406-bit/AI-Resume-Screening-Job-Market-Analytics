@@ -484,10 +484,13 @@ fig.update_layout(
     xaxis_title="Company Size",
     yaxis_title="Average Salary (₹)"
 )
+st.plotly_chart(fig, use_container_width=True)
+fig.update_layout(
+    xaxis_title="Company Size",
+    yaxis_title="Average Salary (₹)"
+)
 
 st.plotly_chart(fig, use_container_width=True)
-
-st.markdown("---")
 
 elif menu == "📄 ATS Score":
 
