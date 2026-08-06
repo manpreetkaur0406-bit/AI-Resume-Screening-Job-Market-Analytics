@@ -303,27 +303,22 @@ elif menu == "📊 EDA":
     # 📊 Salary Distribution
     # =====================================
     st.subheader("📊 Salary Distribution")
-
-fig = px.histogram(
-    filtered_df,
-    x="salary_in_inr",
-    nbins=30,
-    title="Salary Distribution (₹)",
-    labels={"salary_in_inr": "Salary (INR)"}
-)
-
-fig.update_layout(
-    xaxis_title="Salary (₹)",
-    yaxis_title="Number of Employees"
-)
-
-st.plotly_chart(fig, use_container_width=True)
-
-st.info(
-    f"Average salary in the selected dataset is ₹{filtered_df['salary_in_inr'].mean():,.0f}"
-)
-
-st.markdown("---")
+        fig = px.histogram(
+            filtered_df,
+            x="salary_in_inr",
+            nbins=30,
+            title="Salary Distribution (₹)",
+            labels={"salary_in_inr": "Salary (INR)"}
+        )
+        fig.update_layout(
+            xaxis_title="Salary (₹)",
+            yaxis_title="Number of Employees"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        st.info(
+            f"Average salary in the selected dataset is ₹{filtered_df['salary_in_inr'].mean():,.0f}"
+        )
+        st.markdown("---")
 
 
 # =====================================
