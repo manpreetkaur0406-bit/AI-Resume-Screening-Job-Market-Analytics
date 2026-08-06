@@ -95,6 +95,7 @@ if menu == "🏠 Home":
 
     st.markdown("---")
  st.dataframe(jobs_df.head())
+
 elif menu == "📊 EDA":
 
     st.title("📊 Exploratory Data Analysis")
@@ -174,6 +175,115 @@ elif menu == "📊 EDA":
         ]
 
     st.markdown("---")
+        st.subheader("📄 Dataset Preview")
+
+    st.dataframe(filtered_df.head())
+
+    st.markdown("---")
+
+    # ==========================
+    # Salary Distribution
+    # ==========================
+
+    st.subheader("💰 Salary Distribution (INR)")
+
+    fig = px.histogram(
+        filtered_df,
+        x="salary_in_inr",
+        nbins=30,
+        title="Salary Distribution"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    # ==========================
+    # Salary by Experience
+    # ==========================
+
+    st.subheader("📈 Average Salary by Experience")
+
+    exp_salary = (
+        filtered_df
+        .groupby("experience_level")["salary_in_inr"]
+        .mean()
+        .reset_index()
+    )
+
+    fig = px.bar(
+        exp_salary,
+        x="experience_level",
+        y="salary_in_inr",
+        color="experience_level",
+        title="Average Salary by Experience"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    # ==========================
+    # Top 10 Job Titles
+    # ==========================
+
+    st.subheader("🏆 Top 10 Highest Paying Jobs")
+
+    top_jobs = (
+        filtered_df
+        .groupby("job_title")["salary_in_inr"]
+        .mean()
+        .sort_values(ascending=False)
+        .head(10)
+        .reset_index()
+    )
+
+    fig = px.bar(
+        top_jobs,
+        x="salary_in_inr",
+        y="job_title",
+        orientation="h",
+        color="salary_in_inr",
+        title="Highest Paying Job Roles"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    # ==========================
+    # Remote Ratio
+    # ==========================
+
+    st.subheader("🏠 Remote Work Distribution")
+
+    remote = (
+        filtered_df["remote_ratio"]
+        .value_counts()
+        .reset_index()
+    )
+
+    remote.columns = ["Remote Ratio", "Count"]
+
+    fig = px.pie(
+        remote,
+        names="Remote Ratio",
+        values="Count",
+        title="Remote Work Distribution"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    # ==========================
+    # Company Size
+    # ==========================
+
+    st.subheader("🏢 Company Size Distribution")
+
+    fig = px.histogram(
+        filtered_df,
+        x="company_size",
+        color="company_size",
+        title="Company Size"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
 elif menu == "📄 ATS Score":
 
     st.title("📄 ATS Resume Score")
