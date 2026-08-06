@@ -94,7 +94,7 @@ if menu == "🏠 Home":
         )
 
     st.markdown("---")
- st.dataframe(jobs_df.head())
+    st.dataframe(jobs_df.head())
 
 elif menu == "📊 EDA":
 
