@@ -98,15 +98,15 @@ if menu == "🏠 Home":
 
 elif menu == "📊 EDA":
 
-    st.title("📊 Exploratory Data Analysis")
+    st.title("📊 Exploratory Data Analysis Dashboard")
 
     st.write(
-        "Explore salary trends, job roles and employment insights from the Data Science Job Market."
+        "Analyze salary trends, job roles, experience levels and employment insights."
     )
 
-    # ================================
-    # Convert Salary to Indian Rupees
-    # ================================
+    # =====================================
+    # Convert Salary to INR
+    # =====================================
 
     df = salary_df.copy()
 
@@ -114,9 +114,9 @@ elif menu == "📊 EDA":
 
     df["salary_in_inr"] = df["salary_in_usd"] * USD_TO_INR
 
-    # ================================
+    # =====================================
     # Dashboard KPIs
-    # ================================
+    # =====================================
 
     total_records = len(df)
     total_jobs = df["job_title"].nunique()
@@ -132,55 +132,25 @@ elif menu == "📊 EDA":
 
     c1, c2, c3, c4 = st.columns(4)
 
-    c1.metric(
-        "📄 Total Records",
-        f"{total_records}"
-    )
-
-    c2.metric(
-        "💼 Job Titles",
-        f"{total_jobs}"
-    )
-
-    c3.metric(
-        "🌍 Countries",
-        f"{total_countries}"
-    )
-
-    c4.metric(
-        "🏢 Companies",
-        f"{total_companies}"
-    )
+    c1.metric("📄 Total Records", total_records)
+    c2.metric("💼 Job Titles", total_jobs)
+    c3.metric("🌍 Countries", total_countries)
+    c4.metric("🏢 Companies", total_companies)
 
     c1, c2, c3, c4 = st.columns(4)
 
-    c1.metric(
-        "💰 Avg Salary",
-        f"₹{avg_salary:,.0f}"
-    )
-
-    c2.metric(
-        "📊 Median Salary",
-        f"₹{median_salary:,.0f}"
-    )
-
-    c3.metric(
-        "🚀 Highest Salary",
-        f"₹{highest_salary:,.0f}"
-    )
-
-    c4.metric(
-        "📉 Lowest Salary",
-        f"₹{lowest_salary:,.0f}"
-    )
+    c1.metric("💰 Average Salary", f"₹{avg_salary:,.0f}")
+    c2.metric("📊 Median Salary", f"₹{median_salary:,.0f}")
+    c3.metric("🚀 Highest Salary", f"₹{highest_salary:,.0f}")
+    c4.metric("📉 Lowest Salary", f"₹{lowest_salary:,.0f}")
 
     st.markdown("---")
 
-    # ================================
+    # =====================================
     # Filters
-    # ================================
+    # =====================================
 
-    st.subheader("🎛️ Filter Dataset")
+    st.subheader("🎛️ Dataset Filters")
 
     col1, col2, col3 = st.columns(3)
 
@@ -194,7 +164,7 @@ elif menu == "📊 EDA":
         ["All"] + sorted(df["employment_type"].unique())
     )
 
-    company = col3.selectbox(
+    company_size = col3.selectbox(
         "Company Size",
         ["All"] + sorted(df["company_size"].unique())
     )
@@ -206,19 +176,19 @@ elif menu == "📊 EDA":
         ["All"] + sorted(df["remote_ratio"].astype(str).unique())
     )
 
-    year = col5.selectbox(
+    work_year = col5.selectbox(
         "Work Year",
         ["All"] + sorted(df["work_year"].astype(str).unique())
     )
 
     country = col6.selectbox(
-        "Company Location",
+        "Country",
         ["All"] + sorted(df["company_location"].unique())
     )
 
-    # ================================
+    # =====================================
     # Apply Filters
-    # ================================
+    # =====================================
 
     filtered_df = df.copy()
 
@@ -232,9 +202,9 @@ elif menu == "📊 EDA":
             filtered_df["employment_type"] == employment
         ]
 
-    if company != "All":
+    if company_size != "All":
         filtered_df = filtered_df[
-            filtered_df["company_size"] == company
+            filtered_df["company_size"] == company_size
         ]
 
     if remote != "All":
@@ -242,9 +212,9 @@ elif menu == "📊 EDA":
             filtered_df["remote_ratio"].astype(str) == remote
         ]
 
-    if year != "All":
+    if work_year != "All":
         filtered_df = filtered_df[
-            filtered_df["work_year"].astype(str) == year
+            filtered_df["work_year"].astype(str) == work_year
         ]
 
     if country != "All":
@@ -256,9 +226,9 @@ elif menu == "📊 EDA":
 
     st.markdown("---")
 
-    # ================================
+    # =====================================
     # Search Job Title
-    # ================================
+    # =====================================
 
     search = st.text_input(
         "🔍 Search Job Title"
@@ -274,218 +244,256 @@ elif menu == "📊 EDA":
             )
         ]
 
-    # ================================
+    # =====================================
     # Dataset Preview
-    # ================================
+    # =====================================
 
-    st.subheader("📋 Filtered Dataset")
+    st.subheader("📋 Dataset Preview")
 
     st.dataframe(
         filtered_df,
         use_container_width=True
     )
 
-    # ================================
-    # Download CSV
-    # ================================
+    st.markdown("---")
+
+    # =====================================
+    # Download Dataset
+    # =====================================
 
     csv = filtered_df.to_csv(index=False).encode("utf-8")
 
     st.download_button(
-        "⬇ Download Filtered Dataset",
-        csv,
-        "filtered_salary_dataset.csv",
-        "text/csv"
+        label="⬇ Download Filtered Dataset",
+        data=csv,
+        file_name="filtered_salary_dataset.csv",
+        mime="text/csv"
     )
 
     st.markdown("---")
     # =====================================
     # 📊 Salary Distribution
     # =====================================
-    st.subheader("📊 Salary Distribution")
+
+    st.subheader("📊 Salary Distribution (INR)")
+
     fig = px.histogram(
-            filtered_df,
-            x="salary_in_inr",
-            nbins=30,
-            title="Salary Distribution (₹)",
-            labels={"salary_in_inr": "Salary (INR)"}
-        )
-    fig.update_layout(
-            xaxis_title="Salary (₹)",
-            yaxis_title="Number of Employees"
-        )
-    st.plotly_chart(fig, use_container_width=True)
-    st.info(
-        f"Average salary in the selected dataset is ₹{filtered_df['salary_in_inr'].mean():,.0f}"
+        filtered_df,
+        x="salary_in_inr",
+        nbins=30,
+        title="Salary Distribution",
+        color_discrete_sequence=["#4F46E5"]
     )
+
+    fig.update_layout(
+        xaxis_title="Salary (₹)",
+        yaxis_title="Number of Employees"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.info(
+        f"Average Salary: ₹{filtered_df['salary_in_inr'].mean():,.0f}"
+    )
+
     st.markdown("---")
 
+    # =====================================
+    # 📈 Salary by Experience
+    # =====================================
 
-# =====================================
-# 📈 Average Salary by Experience
-# =====================================
+    st.subheader("📈 Average Salary by Experience Level")
 
-st.subheader("📈 Average Salary by Experience Level")
+    exp_salary = (
+        filtered_df
+        .groupby("experience_level")["salary_in_inr"]
+        .mean()
+        .reset_index()
+    )
 
-exp_salary = (
-    filtered_df
-    .groupby("experience_level")["salary_in_inr"]
-    .mean()
-    .reset_index()
-)
+    fig = px.bar(
+        exp_salary,
+        x="experience_level",
+        y="salary_in_inr",
+        color="experience_level",
+        title="Salary by Experience Level"
+    )
 
-fig = px.bar(
-    exp_salary,
-    x="experience_level",
-    y="salary_in_inr",
-    color="experience_level",
-    title="Average Salary by Experience"
-)
+    fig.update_layout(
+        xaxis_title="Experience Level",
+        yaxis_title="Average Salary (₹)"
+    )
 
-fig.update_layout(
-    xaxis_title="Experience Level",
-    yaxis_title="Average Salary (₹)"
-)
+    st.plotly_chart(fig, use_container_width=True)
 
-st.plotly_chart(fig, use_container_width=True)
+    st.markdown("---")
 
-st.info(
-    "Senior and Executive professionals usually earn higher salaries than Entry and Mid-level professionals."
-)
+    # =====================================
+    # 💼 Top 10 Highest Paying Jobs
+    # =====================================
 
-st.markdown("---")
+    st.subheader("💼 Top 10 Highest Paying Job Roles")
 
+    top_jobs = (
+        filtered_df
+        .groupby("job_title")["salary_in_inr"]
+        .mean()
+        .sort_values(ascending=False)
+        .head(10)
+        .reset_index()
+    )
 
-# =====================================
-# 💼 Top 10 Highest Paying Jobs
-# =====================================
+    fig = px.bar(
+        top_jobs,
+        x="salary_in_inr",
+        y="job_title",
+        orientation="h",
+        color="salary_in_inr",
+        title="Top 10 Highest Paying Jobs"
+    )
 
-st.subheader("💼 Top 10 Highest Paying Job Titles")
+    fig.update_layout(
+        xaxis_title="Average Salary (₹)",
+        yaxis_title="Job Role"
+    )
 
-top_jobs = (
-    filtered_df
-    .groupby("job_title")["salary_in_inr"]
-    .mean()
-    .sort_values(ascending=False)
-    .head(10)
-    .reset_index()
-)
+    st.plotly_chart(fig, use_container_width=True)
 
-fig = px.bar(
-    top_jobs,
-    x="salary_in_inr",
-    y="job_title",
-    orientation="h",
-    color="salary_in_inr",
-    title="Top 10 Highest Paying Jobs"
-)
+    st.markdown("---")
 
-fig.update_layout(
-    xaxis_title="Average Salary (₹)",
-    yaxis_title="Job Title"
-)
+    # =====================================
+    # 🌍 Salary by Country
+    # =====================================
 
-st.plotly_chart(fig, use_container_width=True)
+    st.subheader("🌍 Top Countries by Average Salary")
 
-st.markdown("---")
+    country_salary = (
+        filtered_df
+        .groupby("company_location")["salary_in_inr"]
+        .mean()
+        .sort_values(ascending=False)
+        .head(10)
+        .reset_index()
+    )
 
+    fig = px.bar(
+        country_salary,
+        x="company_location",
+        y="salary_in_inr",
+        color="salary_in_inr",
+        title="Average Salary by Country"
+    )
 
-# =====================================
-# 🌍 Salary by Country
-# =====================================
+    st.plotly_chart(fig, use_container_width=True)
 
-st.subheader("🌍 Top 10 Countries by Average Salary")
+    st.markdown("---")
 
-country_salary = (
-    filtered_df
-    .groupby("company_location")["salary_in_inr"]
-    .mean()
-    .sort_values(ascending=False)
-    .head(10)
-    .reset_index()
-)
+    # =====================================
+    # 🏠 Remote Work Distribution
+    # =====================================
 
-fig = px.bar(
-    country_salary,
-    x="company_location",
-    y="salary_in_inr",
-    color="salary_in_inr",
-    title="Average Salary by Country"
-)
+    st.subheader("🏠 Remote Work Distribution")
 
-fig.update_layout(
-    xaxis_title="Country",
-    yaxis_title="Average Salary (₹)"
-)
+    remote_df = (
+        filtered_df["remote_ratio"]
+        .value_counts()
+        .reset_index()
+    )
 
-st.plotly_chart(fig, use_container_width=True)
+    remote_df.columns = ["Remote Ratio", "Count"]
 
-st.markdown("---")
+    fig = px.pie(
+        remote_df,
+        names="Remote Ratio",
+        values="Count",
+        title="Remote Work Ratio"
+    )
 
+    st.plotly_chart(fig, use_container_width=True)
 
-# =====================================
-# 🏠 Remote Work Analysis
-# =====================================
+    st.markdown("---")
 
-st.subheader("🏠 Salary by Remote Ratio")
+    # =====================================
+    # 🏢 Company Size Distribution
+    # =====================================
 
-remote_salary = (
-    filtered_df
-    .groupby("remote_ratio")["salary_in_inr"]
-    .mean()
-    .reset_index()
-)
+    st.subheader("🏢 Company Size Distribution")
 
-fig = px.bar(
-    remote_salary,
-    x="remote_ratio",
-    y="salary_in_inr",
-    color="remote_ratio",
-    title="Average Salary by Remote Ratio"
-)
+    company_df = (
+        filtered_df["company_size"]
+        .value_counts()
+        .reset_index()
+    )
 
-fig.update_layout(
-    xaxis_title="Remote Ratio (%)",
-    yaxis_title="Average Salary (₹)"
-)
+    company_df.columns = ["Company Size", "Count"]
 
-st.plotly_chart(fig, use_container_width=True)
+    fig = px.bar(
+        company_df,
+        x="Company Size",
+        y="Count",
+        color="Company Size",
+        title="Company Size"
+    )
 
-st.markdown("---")
+    st.plotly_chart(fig, use_container_width=True)
 
+    st.markdown("---")
 
-# =====================================
-# 🏢 Company Size Analysis
-# =====================================
+    # =====================================
+    # 💼 Employment Type
+    # =====================================
 
-st.subheader("🏢 Salary by Company Size")
+    st.subheader("💼 Employment Type Distribution")
 
-company_salary = (
-    filtered_df
-    .groupby("company_size")["salary_in_inr"]
-    .mean()
-    .reset_index()
-)
+    employment_df = (
+        filtered_df["employment_type"]
+        .value_counts()
+        .reset_index()
+    )
 
-fig = px.bar(
-    company_salary,
-    x="company_size",
-    y="salary_in_inr",
-    color="company_size",
-    title="Average Salary by Company Size"
-)
+    employment_df.columns = ["Employment Type", "Count"]
 
-fig.update_layout(
-    xaxis_title="Company Size",
-    yaxis_title="Average Salary (₹)"
-)
-st.plotly_chart(fig, use_container_width=True)
-fig.update_layout(
-    xaxis_title="Company Size",
-    yaxis_title="Average Salary (₹)"
-)
+    fig = px.pie(
+        employment_df,
+        names="Employment Type",
+        values="Count",
+        title="Employment Type Distribution"
+    )
 
-st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+
+    # =====================================
+    # 📅 Salary Trend by Work Year
+    # =====================================
+
+    st.subheader("📅 Salary Trend")
+
+    trend = (
+        filtered_df
+        .groupby("work_year")["salary_in_inr"]
+        .mean()
+        .reset_index()
+    )
+
+    fig = px.line(
+        trend,
+        x="work_year",
+        y="salary_in_inr",
+        markers=True,
+        title="Average Salary Trend"
+    )
+
+    fig.update_layout(
+        xaxis_title="Work Year",
+        yaxis_title="Average Salary (₹)"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.markdown("---")
+    
 
 elif menu == "📄 ATS Score":
 
