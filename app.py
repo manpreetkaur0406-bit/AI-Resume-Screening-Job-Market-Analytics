@@ -303,7 +303,7 @@ elif menu == "📊 EDA":
     # 📊 Salary Distribution
     # =====================================
     st.subheader("📊 Salary Distribution")
-        fig = px.histogram(
+    fig = px.histogram(
             filtered_df,
             x="salary_in_inr",
             nbins=30,
