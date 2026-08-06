@@ -299,6 +299,196 @@ elif menu == "📊 EDA":
     )
 
     st.markdown("---")
+    # =====================================
+# 📊 Salary Distribution
+# =====================================
+
+st.subheader("📊 Salary Distribution")
+
+fig = px.histogram(
+    filtered_df,
+    x="salary_in_inr",
+    nbins=30,
+    title="Salary Distribution (₹)",
+    labels={"salary_in_inr": "Salary (INR)"}
+)
+
+fig.update_layout(
+    xaxis_title="Salary (₹)",
+    yaxis_title="Number of Employees"
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+st.info(
+    f"Average salary in the selected dataset is ₹{filtered_df['salary_in_inr'].mean():,.0f}"
+)
+
+st.markdown("---")
+
+
+# =====================================
+# 📈 Average Salary by Experience
+# =====================================
+
+st.subheader("📈 Average Salary by Experience Level")
+
+exp_salary = (
+    filtered_df
+    .groupby("experience_level")["salary_in_inr"]
+    .mean()
+    .reset_index()
+)
+
+fig = px.bar(
+    exp_salary,
+    x="experience_level",
+    y="salary_in_inr",
+    color="experience_level",
+    title="Average Salary by Experience"
+)
+
+fig.update_layout(
+    xaxis_title="Experience Level",
+    yaxis_title="Average Salary (₹)"
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+st.info(
+    "Senior and Executive professionals usually earn higher salaries than Entry and Mid-level professionals."
+)
+
+st.markdown("---")
+
+
+# =====================================
+# 💼 Top 10 Highest Paying Jobs
+# =====================================
+
+st.subheader("💼 Top 10 Highest Paying Job Titles")
+
+top_jobs = (
+    filtered_df
+    .groupby("job_title")["salary_in_inr"]
+    .mean()
+    .sort_values(ascending=False)
+    .head(10)
+    .reset_index()
+)
+
+fig = px.bar(
+    top_jobs,
+    x="salary_in_inr",
+    y="job_title",
+    orientation="h",
+    color="salary_in_inr",
+    title="Top 10 Highest Paying Jobs"
+)
+
+fig.update_layout(
+    xaxis_title="Average Salary (₹)",
+    yaxis_title="Job Title"
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+st.markdown("---")
+
+
+# =====================================
+# 🌍 Salary by Country
+# =====================================
+
+st.subheader("🌍 Top 10 Countries by Average Salary")
+
+country_salary = (
+    filtered_df
+    .groupby("company_location")["salary_in_inr"]
+    .mean()
+    .sort_values(ascending=False)
+    .head(10)
+    .reset_index()
+)
+
+fig = px.bar(
+    country_salary,
+    x="company_location",
+    y="salary_in_inr",
+    color="salary_in_inr",
+    title="Average Salary by Country"
+)
+
+fig.update_layout(
+    xaxis_title="Country",
+    yaxis_title="Average Salary (₹)"
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+st.markdown("---")
+
+
+# =====================================
+# 🏠 Remote Work Analysis
+# =====================================
+
+st.subheader("🏠 Salary by Remote Ratio")
+
+remote_salary = (
+    filtered_df
+    .groupby("remote_ratio")["salary_in_inr"]
+    .mean()
+    .reset_index()
+)
+
+fig = px.bar(
+    remote_salary,
+    x="remote_ratio",
+    y="salary_in_inr",
+    color="remote_ratio",
+    title="Average Salary by Remote Ratio"
+)
+
+fig.update_layout(
+    xaxis_title="Remote Ratio (%)",
+    yaxis_title="Average Salary (₹)"
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+st.markdown("---")
+
+
+# =====================================
+# 🏢 Company Size Analysis
+# =====================================
+
+st.subheader("🏢 Salary by Company Size")
+
+company_salary = (
+    filtered_df
+    .groupby("company_size")["salary_in_inr"]
+    .mean()
+    .reset_index()
+)
+
+fig = px.bar(
+    company_salary,
+    x="company_size",
+    y="salary_in_inr",
+    color="company_size",
+    title="Average Salary by Company Size"
+)
+
+fig.update_layout(
+    xaxis_title="Company Size",
+    yaxis_title="Average Salary (₹)"
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+st.markdown("---")
 elif menu == "📄 ATS Score":
 
     st.title("📄 ATS Resume Score")
